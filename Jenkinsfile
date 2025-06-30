@@ -29,6 +29,7 @@ pipeline {
 
         stage('Deploy to Minikube') {
             steps {
+                bat 'minikube profile list'
                 bat "kubectl config use-context %CONTEXT%"
                 bat "kubectl apply -f deployment.yaml"
             }
