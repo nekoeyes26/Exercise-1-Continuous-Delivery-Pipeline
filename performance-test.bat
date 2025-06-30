@@ -17,7 +17,9 @@ for /f "delims=" %%j in ('kubectl get svc flask-hello-service -o "jsonpath={.spe
 set ENDPOINT=http://!NODE_IP!:!NODE_PORT!
 echo ENPOINT_URL=!ENDPOINT!
 
-start /min cmd /c "kubectl port-forward svc/flask-hello-service 4446:5000 > portforward.log 2>&1"
+for /f "tokens=5" %%p in ('netstat -ano ^| findstr :4446') do taskkill /F /PID %%p >nul 2>&1
+
+start /min "" cmd /c "kubectl port-forward svc/flask-hello-service 4446:5000 > portforward.log 2>&1"
 
 set /a COUNT=0
 :wait_port
