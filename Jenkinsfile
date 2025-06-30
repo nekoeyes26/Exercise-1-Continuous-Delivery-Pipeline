@@ -52,7 +52,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up deployment and service...'
-            bat '''for /f "delims=" %%i in ('kubectl get pods -l app=flask-hello -o=jsonpath="{.items[0].metadata.name}") do kubectl logs %%i'''
+            bat '''for /f "delims=" %%i in ('kubectl get pods -l app=flask-hello -o=jsonpath="{.items[0].metadata.name}"') do kubectl logs %%i'''            
             bat 'kubectl delete deployment flask-hello --ignore-not-found'
             bat 'kubectl delete service flask-hello-service --ignore-not-found'
         }
