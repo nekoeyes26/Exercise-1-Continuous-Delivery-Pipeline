@@ -16,14 +16,16 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
-                bat "docker build -t %IMAGE_NAME%:%TAG% ."
+            steps {                
+                bat "docker build -t ${IMAGE_NAME}:${TAG} ."
+                bat "docker images"
             }
         }
 
         stage('Load Image to Minikube') {
-            steps {
-                bat "minikube -p %PROFILE% image load %IMAGE_NAME%:%TAG%"
+            steps {                
+                bat "minikube -p ${PROFILE} image load ${IMAGE_NAME}:${TAG}"
+                bat "minikube -p ${PROFILE} ssh docker images"
             }
         }
 
