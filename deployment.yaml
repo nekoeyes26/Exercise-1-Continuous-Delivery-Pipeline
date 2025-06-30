@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: flask-hello
-          image: aeonyx/flask-hello:latest
+          image: aeonyx/hello-service:{{VERSION}}
           ports:
             - containerPort: 5000
 ---
