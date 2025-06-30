@@ -40,6 +40,12 @@ pipeline {
             }
         }
 
+        stage('Show Pod Logs') {
+            steps {
+                bat "for /f \"delims=\" %i in ('kubectl get pods -l app=flask-hello -o=jsonpath=\"{.items[0].metadata.name}\"') do kubectl logs %i"
+            }
+        }
+
         stage('Performance Test') {
             steps {
                 bat 'call performance-test.bat'
