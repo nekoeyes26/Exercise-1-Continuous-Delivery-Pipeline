@@ -15,7 +15,24 @@ for /f "delims=" %%j in ('kubectl get svc flask-hello-service -o "jsonpath={.spe
 
 :: Compose full endpoint
 set ENDPOINT=http://!NODE_IP!:!NODE_PORT!
-echo [INFO] Testing against !ENDPOINT!
+echo ENPOINT_URL=!ENDPOINT!
+
+start /min cmd /c "kubectl port-forward svc/flask-hello-service 4446:5000 > portforward.log 2>&1"
+
+set /a COUNT=0
+:wait_port
+powershell -Command "try { $c = New-Object Net.Sockets.TcpClient; $c.Connect('localhost',4446); $c.Close(); exit 0 } catch { exit 1 }"
+if not errorlevel 1 goto port_ready
+set /a COUNT+=1
+if %COUNT% GEQ 20 (
+    echo ERROR: Port forwarding ke 4446 gagal!
+    exit /b 1
+)
+timeout /t 1 >nul
+goto wait_port
+:port_ready
+
+set ENDPOINT=http://localhost:4446
 
 :: Loop 100x request
 set N=100
